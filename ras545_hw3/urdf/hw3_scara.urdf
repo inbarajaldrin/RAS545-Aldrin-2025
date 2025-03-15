@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<robot name="hw3_scara">
+
+  <link name="world"/>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.565200"/>
+      <inertia ixx="0.000002" ixy="0.000000" ixz="0.000000"
+              iyy="0.000002" iyz="0.000000" izz="0.000003"/>
+    </inertial>
+  </link>
+
+  <link name="motor_1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.972920"/>
+      <inertia ixx="0.000265" ixy="0.000000" ixz="0.000000"
+              iyy="0.000265" iyz="0.000000" izz="0.000004"/>
+    </inertial>
+  </link>
+
+  <link name="link_1">
+    <visual>
+      <origin xyz="0 0 -0.2" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.2" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 -0.2" rpy="0 0 0"/>
+      <mass value="4.826708"/>
+      <inertia ixx="0.001944" ixy="0.000000" ixz="-0.001927"
+               iyy="0.004465" iyz="0.000000" izz="0.002535"/>
+    </inertial>
+  </link>
+
+  <link name="motor_2">
+    <visual>
+      <origin xyz="-0.4 0 -0.2" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.4 0 -0.2" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.4 0 -0.2" rpy="0 0 0"/>
+      <mass value="2.466150"/>
+      <inertia ixx="0.002736" ixy="0.000000" ixz="-0.003206"
+               iyy="0.006682" iyz="0.000000" izz="0.003951"/>
+    </inertial>
+  </link>
+
+  <link name="link_2">
+    <visual>
+      <origin xyz="-0.4 0 -0.45" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.4 0 -0.45" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_2.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.4 0 -0.45" rpy="0 0 0"/>
+      <mass value="3.570708"/>
+      <inertia ixx="0.007240" ixy="0.000000" ixz="-0.008835"
+               iyy="0.018280" iyz="-0.000000" izz="0.011049"/>
+    </inertial>
+  </link>
+
+  <link name="motor_3">
+    <visual>
+      <origin xyz="-0.7 0 -0.45" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.7 0 -0.45" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/motor_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.7 0 -0.45" rpy="0 0 0"/>
+      <mass value="1.479690"/>
+      <inertia ixx="0.004108" ixy="-0.000000" ixz="-0.005438"
+               iyy="0.011358" iyz="-0.000000" izz="0.007253"/>
+    </inertial>
+  </link>
+
+  <link name="link_3">
+    <visual>
+      <origin xyz="-0.7 0 -0.6" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="-0.7 0 -0.6" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ras545_hw3/meshes/link_3.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.7 0 -0.6" rpy="0 0 0"/>
+      <mass value="1.785354"/>
+      <inertia ixx="0.006444" ixy="0.000000" ixz="-0.008348"
+               iyy="0.017297" iyz="0.000000" izz="0.010858"/>
+    </inertial>
+  </link>
+
+  <link name="ee_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.04"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="joint0_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+  <joint name="joint1_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="motor_1"/>
+  </joint>
+
+  <joint name="joint2_revolute" type="continuous">
+    <origin xyz="0 0 0.2" rpy="0 0 0"/>
+    <parent link="motor_1"/>
+    <child link="link_1"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="joint3_fixed" type="fixed">
+    <origin xyz="0.4 0 0.0" rpy="0 0 0"/>
+    <parent link="link_1"/>
+    <child link="motor_2"/>
+  </joint>
+
+  <joint name="joint4_revolute" type="continuous">
+    <origin xyz="0.0 0 0.25" rpy="0 0 0"/>
+    <parent link="motor_2"/>
+    <child link="link_2"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="joint5_fixed" type="fixed">
+    <origin xyz="0.3 0 0.0" rpy="0 0 0"/>
+    <parent link="link_2"/>
+    <child link="motor_3"/>
+  </joint>
+
+  <joint name="joint6_revolute" type="continuous">
+    <origin xyz="0.0 0 0.15" rpy="0 0 0"/>
+    <parent link="motor_3"/>
+    <child link="link_3"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <joint name="joint7_fixed" type="fixed">
+    <origin xyz="0.15 0 0" rpy="0 0 0"/>
+    <parent link="link_3"/>
+    <child link="ee_link"/>
+  </joint>
+
+</robot>
