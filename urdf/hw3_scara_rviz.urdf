@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot name="hw3_scara">
 
+  <link name="world"/>
+
   <link name="base_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -162,6 +164,12 @@
       </geometry>
     </collision>
   </link>
+
+  <joint name="joint0_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
 
   <joint name="joint1_fixed" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>

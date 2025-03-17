@@ -30,11 +30,7 @@ install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
 )
 # Install URDF and model config files
-install(DIRECTORY urdf
-  DESTINATION share/${PROJECT_NAME}
-)
-
-install(FILES model.config
+install(DIRECTORY urdf config
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <robot name="hw3_scara">
 
+  <link name="world"/>
+
   <link name="base_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://ras545_hw3/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://ras545_hw3/meshes/base_link.stl" scale="0.001 0.001 0.001"/> 
       </geometry>
     </visual>
     <collision>
@@ -163,6 +165,12 @@
     </collision>
   </link>
 
+  <joint name="joint0_fixed" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
   <joint name="joint1_fixed" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <parent link="base_link"/>
@@ -174,6 +182,7 @@
     <parent link="motor_1"/>
     <child link="link_1"/>
     <axis xyz="0 0 1"/>
+    <dynamics damping="5" friction="0.0"/>
   </joint>
 
   <joint name="joint3_fixed" type="fixed">
@@ -187,6 +196,7 @@
     <parent link="motor_2"/>
     <child link="link_2"/>
     <axis xyz="0 0 1"/>
+    <dynamics damping="5" friction="0.0"/>
   </joint>
 
   <joint name="joint5_fixed" type="fixed">
@@ -200,6 +210,7 @@
     <parent link="motor_3"/>
     <child link="link_3"/>
     <axis xyz="0 0 1"/>
+    <dynamics damping="5" friction="0.0"/>
   </joint>
 
   <joint name="joint7_fixed" type="fixed">
@@ -207,5 +218,67 @@
     <parent link="link_3"/>
     <child link="ee_link"/>
   </joint>
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <!-- The controllers will be loaded via launch/YAML, so parameters can be left empty or minimal. -->
+      <parameters>$(find ras545_hw3)/config/scara_gazebo.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Inside the <robot> tag, before closing -->
+  <ros2_control name="scara_robot" type="system">
+    <hardware>
+      <!-- Use GazeboSystem plugin for simulation (no real hardware) -->
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <!-- Define joints and their command/state interfaces -->
+    <joint name="joint2_revolute">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint4_revolute">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+    <joint name="joint6_revolute">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+
+  <!-- Transmissions for ros2_control -->
+  <transmission name="trans_joint2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint2_revolute">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+    </joint>
+    <actuator name="actuator_joint2">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="trans_joint4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint4_revolute">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+    </joint>
+    <actuator name="actuator_joint4">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="trans_joint6">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint6_revolute">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+    </joint>
+    <actuator name="actuator_joint6">
+      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
 </robot>

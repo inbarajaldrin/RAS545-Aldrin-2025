@@ -10,8 +10,8 @@ def generate_launch_description():
     ros2_ws_path = os.path.expanduser("~/ros2_ws/src")  # Change this if your workspace path is different
 
     # Paths to URDF and RViz config file in the source directory
-    urdf_file = os.path.join(ros2_ws_path, package_name, "urdf", "hw3_scara.urdf")
-    rviz_config_file = os.path.join(ros2_ws_path, package_name, "rviz", "scara_config.rviz")
+    urdf_file = os.path.join(ros2_ws_path, package_name, "urdf", "hw3_scara_rviz.urdf")
+    rviz_config_file = os.path.join(ros2_ws_path, package_name, "config", "scara_config.rviz")
 
     # Read URDF file to pass as a parameter
     with open(urdf_file, "r") as infp:
