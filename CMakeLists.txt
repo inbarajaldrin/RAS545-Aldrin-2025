@@ -9,7 +9,6 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclpy REQUIRED)
-find_package(gazebo_ros REQUIRED)
 find_package(robot_state_publisher REQUIRED)
 find_package(xacro REQUIRED)
 
@@ -23,20 +22,31 @@ if(BUILD_TESTING)
   # a copyright and license is added to all source files
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
+
+  find_package(ament_cmake REQUIRED)
+  find_package(control_msgs REQUIRED)
+  find_package(rclcpp REQUIRED)
+  find_package(rclcpp_action REQUIRED)
+  find_package(std_msgs REQUIRED)
+  find_package(geometry_msgs REQUIRED)
+  
 endif()
 
-# Install launch files
-install(DIRECTORY launch
-  DESTINATION share/${PROJECT_NAME}
-)
-# Install URDF and model config files
-install(DIRECTORY urdf config
-  DESTINATION share/${PROJECT_NAME}
+
+install(DIRECTORY
+  launch
+  config
+  urdf
+  meshes
+  DESTINATION share/${PROJECT_NAME}/
 )
 
-# Install meshes files
-install(DIRECTORY meshes
-  DESTINATION share/${PROJECT_NAME}
-)
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+
+  ament_lint_auto_find_test_dependencies()
+endif()
 
 ament_package()

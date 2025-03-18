@@ -1,10 +1,12 @@
 import os
 from ament_index_python.packages import get_package_prefix, get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, ExecuteProcess, RegisterEventHandler
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+from launch.event_handlers import OnProcessExit
+from launch.actions import RegisterEventHandler
 
 import xacro
 
@@ -14,75 +16,75 @@ def generate_launch_description():
     
     pkg_path = os.path.join(get_package_share_directory('ras545_hw3'))
 
-    # Ensure Gazebo can find the model and mesh paths
-    pkg_share_path = os.path.join(get_package_prefix('ras545_hw3'), 'share')
-    if 'GAZEBO_MODEL_PATH' in os.environ:
-        os.environ['GAZEBO_MODEL_PATH'] += os.pathsep + pkg_share_path
-    else:
-        os.environ['GAZEBO_MODEL_PATH'] = pkg_share_path
+    xacro_file = os.path.join(pkg_path,
+                              'urdf',
+                              'hw3_scara_gazebo.urdf')
 
-    # Process the URDF file
-    urdf_file = os.path.join(pkg_path, 'urdf', 'hw3_scara_gazebo.urdf')
-    # Read URDF file to pass as a parameter
-    with open(urdf_file, "r") as infp:
-        robot_description = infp.read()
+    doc = xacro.parse(open(xacro_file))
+    xacro.process_doc(doc)
+    params = {'robot_description': doc.toxml()}
 
-    # Load SCARA controllers
-    scara_controllers = os.path.join(pkg_path, "config", "scara_gazebo.yaml")
-
-    # Create a robot_state_publisher node
-    params = {'robot_description': robot_description, 'use_sim_time': use_sim_time}
-
-    robot_state_publisher = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="screen",
+    node_robot_state_publisher = Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        output='screen',
         parameters=[params]
     )
 
-    joint_state_publisher = Node(
-        package="joint_state_publisher_gui",
-        executable="joint_state_publisher_gui",
-        name="joint_state_publisher_gui",
-        output="screen"
+    ignition_spawn_entity = Node(
+        package='ros_gz_sim',
+        executable='create',
+        output='screen',
+        arguments=['-string', doc.toxml(),
+                   '-name', 'hw3_scara',
+                   '-allow_renaming', 'true'],
     )
 
-    controller_manager = Node(
-        package="controller_manager",
-        executable="ros2_control_node",
-        #parameters=[{"robot_description": robot_description}, scara_controllers, {"use_sim_time": use_sim_time}],
-        parameters=[scara_controllers],
-        output="screen"
-    )
-
-
-    # Include the Gazebo launch file, provided by the gazebo_ros package
-    gazebo = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory('gazebo_ros'), 'launch', 'gazebo.launch.py'
-        )]),
-    )
-
-    # Run the spawner node from the gazebo_ros package.
-    # The entity name doesn't really matter if you only have one
-    spawn_entity = Node(
-        package='gazebo_ros',
-        executable='spawn_entity.py',
-        arguments=['-topic', 'robot_description',
-                   '-entity', 'hw3_scara'],
+    load_joint_state_broadcaster = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'joint_state_broadcaster'],
         output='screen'
     )
 
-    # Launch them all!
+    load_joint_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller', '--set-state', 'active',
+             'joint_trajectory_controller'],
+        output='screen'
+    )
+
+    # Bridge
+    bridge = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+        output='screen'
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='false',
+            default_value='True',
             description='Use sim time if true'
         ),
-        robot_state_publisher,
-        joint_state_publisher,
-        controller_manager,
-        gazebo,
-        spawn_entity,
+        # Launch gazebo environment
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [os.path.join(get_package_share_directory('ros_ign_gazebo'),
+                              'launch', 'ign_gazebo.launch.py')]),
+            launch_arguments=[('gz_args', [' -r -v 4 empty.sdf'])]),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=ignition_spawn_entity,
+                on_exit=[load_joint_state_broadcaster],
+            )
+        ),
+        RegisterEventHandler(
+            event_handler=OnProcessExit(
+                target_action=load_joint_state_broadcaster,
+                on_exit=[load_joint_trajectory_controller],
+            )
+        ),
+        node_robot_state_publisher,
+        ignition_spawn_entity,
+        bridge,
     ])

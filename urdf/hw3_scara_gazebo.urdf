@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="hw3_scara">
+<robot name="hw3_scara" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <link name="world"/>
 
@@ -182,7 +182,7 @@
     <parent link="motor_1"/>
     <child link="link_1"/>
     <axis xyz="0 0 1"/>
-    <dynamics damping="5" friction="0.0"/>
+    <dynamics damping="5"/>
   </joint>
 
   <joint name="joint3_fixed" type="fixed">
@@ -196,7 +196,7 @@
     <parent link="motor_2"/>
     <child link="link_2"/>
     <axis xyz="0 0 1"/>
-    <dynamics damping="5" friction="0.0"/>
+    <dynamics damping="5"/>
   </joint>
 
   <joint name="joint5_fixed" type="fixed">
@@ -210,7 +210,7 @@
     <parent link="motor_3"/>
     <child link="link_3"/>
     <axis xyz="0 0 1"/>
-    <dynamics damping="5" friction="0.0"/>
+    <dynamics damping="5"/>
   </joint>
 
   <joint name="joint7_fixed" type="fixed">
@@ -219,66 +219,53 @@
     <child link="ee_link"/>
   </joint>
 
-  <gazebo>
-    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
-      <!-- The controllers will be loaded via launch/YAML, so parameters can be left empty or minimal. -->
-      <parameters>$(find ras545_hw3)/config/scara_gazebo.yaml</parameters>
-    </plugin>
-  </gazebo>
-
-  <!-- Inside the <robot> tag, before closing -->
-  <ros2_control name="scara_robot" type="system">
+  <ros2_control name="IgnitionSystem" type="system">
     <hardware>
-      <!-- Use GazeboSystem plugin for simulation (no real hardware) -->
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+      <plugin>ign_ros2_control/IgnitionSystem</plugin>
     </hardware>
+
     <!-- Define joints and their command/state interfaces -->
     <joint name="joint2_revolute">
-      <command_interface name="position"/>
-      <state_interface name="position"/>
+      <command_interface name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
     </joint>
+
     <joint name="joint4_revolute">
-      <command_interface name="position"/>
-      <state_interface name="position"/>
+      <command_interface name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
     </joint>
+
     <joint name="joint6_revolute">
-      <command_interface name="position"/>
-      <state_interface name="position"/>
+      <command_interface name="position">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
     </joint>
   </ros2_control>
 
-  <!-- Transmissions for ros2_control -->
-  <transmission name="trans_joint2">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint2_revolute">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-    </joint>
-    <actuator name="actuator_joint2">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <transmission name="trans_joint4">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint4_revolute">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-    </joint>
-    <actuator name="actuator_joint4">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <transmission name="trans_joint6">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="joint6_revolute">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-    </joint>
-    <actuator name="actuator_joint6">
-      <hardwareInterface>hardware_interface/PositionCommandInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+  <gazebo>
+    <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+      <parameters>$(find ras545_hw3)/config/scara_gazebo.yaml</parameters>
+    </plugin>
+  </gazebo>
 
 </robot>
